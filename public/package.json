@@ -1,0 +1,17 @@
+{
+  "name": "public",
+  "version": "1.0.0",
+  "description": "Will Kuster's Personal Website",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Will Kuster",
+  "license": "ISC",
+  "devDependencies": {
+    "sass": "^1.52.1"
+  },
+  "dependencies": {
+    "bootstrap": "^5.3.3"
+  }
+}

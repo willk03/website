@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en" id="htmlmain" data-bs-theme="dark"> <!--Dark Mode Switch-->
+  <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-WEMCW6X5FE"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-WEMCW6X5FE');
+    </script>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Will Kuster</title>
+
+    <link rel="stylesheet" href="scss/custom-theme.css">
+    <link rel="stylesheet" href="css/custom-classes.css">
+  </head>
+  <body>
+    <!--Navbar-->
+    <nav class="navbar navbar-expand-md navbar-dark bg-primary fixed-top">
+      <div class="container">
+        <a href="index.html" class="navbar-brand" style="font-weight: bold;">WK</a>
+        <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#nav" aria-controls="nav" aria-label="Expand Navigation"><span class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse justify-content-end" id="nav">  
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a href="index.html" class="nav-link">Home</a>
+            </li>
+            <li class="nav-item">
+              <a href="projects.html" class="nav-link active">Projects</a>
+            </li>
+            <li class="nav-item">
+              <a href="contact.html" class="nav-link">Contact</a>
+            </li>
+            <li class="nav-item dropdown">
+              <button class="btn btn-primary dropdown-toggle text-light" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Light/Dark
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" onclick="setDark()">Dark Mode</a>
+                <a class="dropdown-item" onclick="setLight()">Light Mode</a>
+            </div>
+            </li>
+          </ul>
+        </div>
+        
+        
+
+      </div>
+      
+    </nav>
+
+    <!--Parallax Title-->
+    <div class="parallax position-relative" style="background-image: url(Recources/Images/PlaceholderImage.svg);">
+      <div class="position-absolute top-50 start-50 translate-middle ">
+        <h1 class="text-light">Projects</h1>
+        
+      </div>
+    </div>
+
+    <div class="container my-4">
+
+      <div class="row">
+        <h1>Tech:</h1>
+      </div>
+      <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-3 row-cols-xxl-4">
+
+        
+        <!-- Template Project Link:
+        <div class="col my-4">
+          <div class="card">
+            <a href="ProjectPages/template.html">
+              <img src="Recources/Images/PlaceholderImage.svg" class="card-img-top" alt="...">
+            </a>
+            <div class="card-body ">
+              <h4>Template</h4>
+              <p class="card-text">This is an example project with some text that describes the project. This text will also link to the project page. It goes directly under the image of the project with a quick description of it.</p>
+              <a href="ProjectPages/template.html" role="button" class="btn btn-primary text-light">Go To Page -></a>
+            </div>
+          </div>
+        </div>
+        -->
+
+        <div class="col my-4">
+          <div class="card">
+            <a href="ProjectPages/PC.html">
+              <img src="Recources/Images/PCImg1.JPG" class="card-img-top" alt="...">
+            </a>
+            <div class="card-body ">
+              <h4>Custom PC</h4>
+              <p class="card-text">Showcase of my custom PC build for programming and gaming.</p>
+              <a href="ProjectPages/PC.html" role="button" class="btn btn-primary text-light">Go To Page -></a>
+            </div>
+          </div>
+        </div>
+
+        <div class="col my-4">
+          <div class="card">
+            <a href="ProjectPages/PC.html">
+              <img src="Recources/Images/PlaceholderImage.svg" class="card-img-top" alt="...">
+            </a>
+            <div class="card-body ">
+              <h4>Neural Network AI</h4>
+              <p class="card-text">Walkthrough, demo, and description of my neural network project built from the ground up.</p>
+              <a href="ProjectPages/AI.html" role="button" class="btn btn-primary text-light">Go To Page -></a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!--
+      <div class="row">
+        <h1>Writing:</h1>
+      </div>
+      <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-3 row-cols-xxl-4">
+
+
+
+      </div>
+      -->
+
+    </div>
+
+    <div class="container-fluid bg-primary my-4 p-5 text-light">
+      <div class="row align-items-center">
+        <div class="col text-center">
+          <p><a href="index.html" class="h1 link-underline link-underline-opacity-0" style="font-weight: bold;">WK</a></p>
+          Designed, programed, and built by Will Kuster
+        </div>
+        <!--
+        <div class="col text-center">
+          <h1>Links</h1>
+          <a href="index.html" class="text-light">Home</a>
+          <a href="projects.html" class="text-light">Projects</a>
+          <a href="contact.html" class="text-light">Contact</a>
+        </div>
+      -->
+      </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+    <script src="js/darkMode.js"></script>
+  </body>
+</html>
