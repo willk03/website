@@ -42,3 +42,54 @@
 body, html{
     height: 100%;
 }
+
+:root {
+  --rainbow-bg: repeating-linear-gradient(
+    -45deg,
+    red 0px,
+    red 20px,
+    orange 20px,
+    orange 40px,
+    yellow 40px,
+    yellow 60px,
+    green 60px,
+    green 80px,
+    blue 80px,
+    blue 100px,
+    #732982 100px,
+    #732982 120px,
+    #FFFFFF 120px,
+    #FFFFFF 140px,
+    #FFC0CB 140px,
+    #FFC0CB 160px,
+    #ADD8E6 160px,
+    #ADD8E6 180px,
+    #A52A2A 180px,
+    #A52A2A 200px
+  );
+}
+
+.rainbow-fade-border{
+  position: relative;
+  border-radius: 16px;
+  background: #111;            /* solid inside */
+  overflow: hidden;
+}
+
+/* rainbow border that also gets the overlay fade */
+.rainbow-fade-border::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  padding:20px;                 /* border thickness */
+  border-radius: inherit;
+  background:
+    linear-gradient(var(--overlay), var(--overlay)),
+    var(--rainbow-bg);
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  pointer-events:none;
+}
