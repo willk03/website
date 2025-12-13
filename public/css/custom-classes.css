@@ -84,7 +84,7 @@ body, html{
   padding:20px;                 /* border thickness */
   border-radius: inherit;
   background:
-    linear-gradient(var(--overlay), var(--overlay)),
+    linear-gradient(var(--overlay, rgba(0,0,0,0)), var(--overlay, rgba(0,0,0,0))),
     var(--rainbow-bg);
   -webkit-mask:
     linear-gradient(#fff 0 0) content-box,
