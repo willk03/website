@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en" id="htmlmain" data-bs-theme="dark"> <!--Dark Mode Switch-->
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Will Kuster</title>
+
+    <link rel="stylesheet" href="../scss/custom-theme.css">
+    <link rel="stylesheet" href="../css/custom-classes.css">
+</head>
+
+<body>
+    <!--Navbar-->
+    <nav class="navbar navbar-expand-md navbar-dark bg-primary fixed-top">
+        <div class="container">
+            <a href="../index.html" class="navbar-brand" style="font-weight: bold;">WK</a>
+            <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#nav" aria-controls="nav"
+                aria-label="Expand Navigation"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse justify-content-end" id="nav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a href="../index.html" class="nav-link">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="../projects.html" class="nav-link">Projects</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="../contact.html" class="nav-link">Contact</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <button class="btn btn-primary dropdown-toggle text-light" type="button" id="dropdownMenuButton"
+                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Light/Dark
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" onclick="setDark()">Dark Mode</a>
+                            <a class="dropdown-item" onclick="setLight()">Light Mode</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+
+
+        </div>
+
+    </nav>
+
+    <!--Parallax Title-->
+    <div class="parallax position-relative"
+        style="background-image: url(../Recources/Images/GroupPolarization/NEU-cops-shooting.jpg);">
+        <div class="position-absolute top-50 start-50 translate-middle ">
+            <div class="box p-1 px-2" style="background-color: var(--bs-dark);">
+                <h1 class="text-light">Group Polarization on YikYak/Sidechat:</h1>
+            </div>
+        </div>
+    </div>
+
+    <div class="container my-4">
+        <div class="row my-4 align-items-stretch gy-4 gy-md-0">
+
+            <div class="col-12 col-md-6 d-flex">
+                <div class="position-relative p-4 w-100">
+                    <h1 class="">The Situation</h1>
+                    <p> I might not be too far off when I say that many of us have received urgent, stressful texts to
+                        check YikYak or Sidechat about the recent violent events on campus.
+                        Scrolling through the posts shows an array of people talking about what happened, opinions on
+                        campus security effectiveness, and more.
+                        For those who don’t know, YikYak or Sidechat is an app that functions as a pure text/upvote
+                        social media platform, but limits communities to university campuses by requiring email
+                        verification for specific schools.
+                        This creates a connected network between a school campus and a completely anonymous post format,
+                        sparking discussion on current events directly tied to the university and its student body.
+                        (Sidechat and YikYak are the same app/servers, but I will refer to it as Sidechat for simplicity
+                        from now on)
+                    </p>
+                </div>
+            </div>
+            <div class="col-12 col-md-6">
+                <img src="../Recources/Images/GroupPolarization/logos.jpg" class="w-100 h-100 object-fit-cover rounded"
+                    alt="Sidechat Screenshot">
+            </div>
+        </div>
+
+        <div class="row my-4 align-items-stretch gy-4 gy-md-0">
+
+            <div class="col-12 col-md-6">
+                <img src="../Recources/Images/GroupPolarization/YikYak-post.jpg"
+                    class="w-100 h-100 object-fit-cover rounded" alt="Sidechat Screenshot">
+            </div>
+
+            <div class="col-12 col-md-6 d-flex">
+                <div class="position-relative p-4 w-100">
+                    <h1 class="">Fueling Polarization</h1>
+                    <p> The posting format of Sidechat directly feeds into what Sunstein defines as group polarization.
+                        Each comment has an upvote tally that directly ties to how fast other students see the post.
+                        This means that the algorithm of the app relies directly on how much other students agree with
+                        the post, feeding into the group mentality. Additionally, what Fallis talked about in the
+                        lecture, human nature will naturally amplify and push opinions to the extreme when talking with
+                        a group. Sidechat is an example of how information technology amplifies this by making this
+                        group connection more accessible and faster. Lastly, the anonymity of Sidechat, not having any
+                        identity tied to posts, frees people to exaggerate posts or vocalize more extreme positions
+                        without risk of pushback, which feeds even more into the polarization and extreme viewpoints of
+                        the group.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row my-4 align-items-stretch gy-4 gy-md-0 box">
+
+            <div class="col-12 col-md-6 d-flex">
+                <div class="box position-relative p-4 text-light w-100 h-100">
+                    <h1 class="">Benefits</h1>
+                    <ol>
+                        <li>Sparks discussion and involvement on campus, which could highlight and vocalize issues that
+                            students are facing. For example, how students are sharing their disapproval of NUPD’s
+                            response to the events in the past week.
+                        </li>
+                        <li>Sunstein talks about how filtering is inevitable to reduce overload, and Sidechat offers
+                            filtering purely from the group consensus of upvotes rather than a personalized algorithm
+                            that could cause things like echo chambers.
+                        </li>
+                        <li>Kerzgesagt talks about how the internet used to be beneficial when small communities formed,
+                            rather than worldwide disagreements. Sidechat could be an answer to this issue, creating
+                            small communities based on location.
+                        </li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="col-12 col-md-6 d-flex">
+                <div class="box position-relative p-4 text-light w-100 h-100">
+                    <h1 class="">Costs</h1>
+                    <ol>
+                        <li>As Nguyen describes, an echo chamber could be created by the group discrediting opposing
+                            voices directly through the voting system of the app.
+                        </li>
+                        <li>Group polarization encouraged by this app not only leads to a certain opinion but amplifies
+                            it to an extreme position, especially with anonymous posts, to the point of highlighting
+                            escalated views.
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="row my-4 align-items-stretch gy-4 gy-md-0">
+
+            <div class="position-relative p-4 w-100">
+                <div class="position-relative text-light w-100 h-100">
+                    <h1 class="">Potential Discussion Questions:</h1>
+                    <ol>
+                        <li>How did you keep up with the current events on campus? Did you use Sidechat at all to get
+                            news, and how did that affect your opinion on what happened?
+                        </li>
+                        <li>What differs between a community-bound forum like Sidechat and a forum/social media open to
+                            the whole world like Facebook or Reddit?
+                        </li>
+                        <li>Do you think the anonymous format of Sidechat helps or hinders its epistemic value?
+                        </li>
+                    </ol>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <div class="container-fluid bg-primary my-4 p-5 text-light">
+        <div class="row align-items-center">
+            <div class="col text-center">
+                <p><a href="../index.html" class="h1 link-underline link-underline-opacity-0"
+                        style="font-weight: bold;">WK</a></p>
+                Designed, programed, and built by Will Kuster
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+        crossorigin="anonymous"></script>
+    <script src="../js/darkMode.js"></script>
+</body>
+
+</html>
