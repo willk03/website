@@ -24,5 +24,14 @@
 
 # ── Example codes (replace with your real image names) ─────
 
-#Test 1
-RedOrangeBlueGreen=success.html
+#Film
+HumphreyBogartImmunityFlyMeToTheMoonFrankSinatra=success.html
+
+#Music
+ZendayaBladeRunnerImmaterialCharliXCX=success.html
+
+#Mutiny
+JamesDeanTheBigLebowskiAlrightMFDOOM=success.html
+
+#A-List
+MargotRobbieLaLaLandHeavenOrLasVegasKateBush=success.html
