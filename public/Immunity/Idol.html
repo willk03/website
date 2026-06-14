@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Cipher</title>
+<style>
+  /* ─── TOKENS ──────────────────────────────────────────── */
+  :root {
+    --bg:        #0A0A0F;
+    --surface:   #13131C;
+    --surface2:  #1C1C2A;
+    --border:    #2A2A40;
+    --accent:    #00C8F0;
+    --amber:     #FFB347;
+    --text:      #d9d9f1;
+    --muted:     #8c8cb3;
+    --success:   #00E887;
+    --danger:    #FF4466;
+    --font-mono: 'Courier New', Courier, monospace;
+    --radius:    8px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-mono);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 1rem;
+  }
+
+  /* ─── HEADER ──────────────────────────────────────────── */
+  #header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  #title {
+    font-size: 1.6rem;
+    letter-spacing: 0.3em;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+
+  #subtitle {
+    font-size: 0.75rem;
+    color: var(--muted);
+    margin-top: 0.4rem;
+    letter-spacing: 0.15em;
+  }
+
+  /* ─── LAYER TRACKER ───────────────────────────────────── */
+  #layer-bar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 2rem;
+    align-items: center;
+  }
+
+  .layer-pip {
+    width: 32px;
+    height: 6px;
+    border-radius: 3px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    transition: background 0.3s, border-color 0.3s;
+  }
+  .layer-pip.done    { background: var(--accent);  border-color: var(--accent); }
+  .layer-pip.active  { background: var(--amber);   border-color: var(--amber);  }
+
+  #layer-label {
+    font-size: 0.7rem;
+    color: var(--muted);
+    margin-left: 10px;
+    letter-spacing: 0.1em;
+  }
+
+  /* ─── SEQUENCE DISPLAY ────────────────────────────────── */
+  #sequence-display {
+    font-size: 0.7rem;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    margin-bottom: 1.5rem;
+    min-height: 1.2em;
+  }
+
+  #sequence-display span {
+    color: var(--accent);
+    margin-right: 4px;
+  }
+
+  /* ─── BUTTON GRID ─────────────────────────────────────── */
+  #grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    width: 100%;
+    max-width: 720px;
+  }
+
+  .tile {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 10px 8px 8px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    transition: border-color 0.15s, transform 0.1s, background 0.15s;
+    user-select: none;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .tile:hover {
+    border-color: var(--accent);
+    background: var(--surface2);
+  }
+
+  .tile:active { transform: scale(0.96); }
+
+  .tile.selected {
+    border-color: var(--amber);
+    background: var(--surface2);
+  }
+
+  .tile img {
+    width: 100%;
+    object-fit: contain;
+    border-radius: 4px;
+    display: block;
+    background: var(--surface2);
+  }
+
+  .tile-label {
+    font-size: 0.65rem;
+    color: var(--muted);
+    text-align: center;
+    line-height: 1.3;
+    word-break: break-word;
+    letter-spacing: 0.05em;
+  }
+
+  /* ripple */
+  .ripple {
+    position: absolute;
+    border-radius: 50%;
+    transform: scale(0);
+    background: rgba(0, 200, 240, 0.18);
+    animation: ripple-anim 0.4s linear;
+    pointer-events: none;
+  }
+  @keyframes ripple-anim {
+    to { transform: scale(4); opacity: 0; }
+  }
+
+  /* scan overlay on select */
+  .tile.scanning::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(transparent 40%, rgba(0,200,240,0.08) 50%, transparent 60%);
+    animation: scan 0.35s ease-out;
+    pointer-events: none;
+  }
+  @keyframes scan {
+    from { transform: translateY(-100%); }
+    to   { transform: translateY(100%); }
+  }
+
+  /* ─── RESULT SCREENS ──────────────────────────────────── */
+  #result-screen {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: var(--bg);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2rem;
+    z-index: 100;
+  }
+
+  #result-screen.visible { display: flex; }
+
+  #result-icon {
+    font-size: 4rem;
+    margin-bottom: 1.5rem;
+    letter-spacing: 0;
+  }
+
+  #result-title {
+    font-size: 1.4rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+  }
+
+  #result-msg {
+    font-size: 0.8rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    max-width: 400px;
+    line-height: 1.8;
+    margin-bottom: 2rem;
+  }
+
+  #result-screen.success #result-icon  { color: var(--success); }
+  #result-screen.success #result-title { color: var(--success); }
+  #result-screen.fail    #result-icon  { color: var(--danger);  }
+  #result-screen.fail    #result-title { color: var(--danger);  }
+
+  #retry-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    padding: 0.5rem 1.5rem;
+    border-radius: var(--radius);
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  #retry-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* loading state for tiles without images */
+  .tile img.broken { opacity: 0.25; filter: grayscale(1); }
+
+  /* ─── LOADING OVERLAY ─────────────────────────────────── */
+  #loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--muted);
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    margin-top: 3rem;
+  }
+  #loading.hidden { display: none; }
+
+  .spinner {
+    width: 24px; height: 24px;
+    border: 2px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  #error-msg {
+    color: var(--danger);
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    max-width: 480px;
+    text-align: center;
+    margin-top: 1rem;
+    line-height: 1.8;
+  }
+  #error-msg.hidden { display: none; }
+</style>
+</head>
+<body>
+
+<div id="header">
+  <div id="title">The Cipher</div>
+  <div id="subtitle">select the sequence &mdash; four layers &mdash; one truth</div>
+</div>
+
+<div id="layer-bar">
+  <div class="layer-pip" id="pip-0"></div>
+  <div class="layer-pip" id="pip-1"></div>
+  <div class="layer-pip" id="pip-2"></div>
+  <div class="layer-pip" id="pip-3"></div>
+  <span id="layer-label">LAYER 1 / 4</span>
+</div>
+
+<div id="sequence-display">sequence: &mdash;</div>
+
+<div id="grid"></div>
+<div id="loading"><div class="spinner"></div><span>initializing cipher&hellip;</span></div>
+<div id="error-msg" class="hidden"></div>
+
+<!-- Result overlay -->
+<div id="result-screen">
+  <div id="result-icon">&#9632;</div>
+  <div id="result-title">ACCESS GRANTED</div>
+  <div id="result-msg"></div>
+  <button id="retry-btn" onclick="resetPuzzle()">&#8635; reset cipher</button>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════
+   CONFIGURATION — edit this block to set up your puzzle
+   ═══════════════════════════════════════════════════════════
+
+   FOLDER PATHS
+   Each layer reads images from a folder. Set these paths to
+   the folders containing your images. They can be relative
+   (e.g. "images/layer1") or absolute URLs.
+
+   IMAGE NAMING → BUTTON LABELS
+   File names are parsed into titles automatically:
+     "red_idol_mask.png"  →  "Red Idol Mask"
+     "ancient-totem.jpg"  →  "Ancient Totem"
+   Underscores, hyphens, and dots become spaces.
+   The extension is stripped.
+
+   CODES FILE
+   Set CODES_FILE to the path of your codes text file.
+   Each line in the file defines one valid code:
+
+     Layer1ButtonName,Layer2ButtonName,Layer3ButtonName,Layer4ButtonName=success-page.html
+
+   Example:
+     RedIdolMask,AncientTotem,BlueOrb,GoldenKey=winner.html
+     FireSymbol,AncientTotem,StoneRune,GoldenKey=other-winner.html
+
+   - Button names must EXACTLY match the parsed label (spaces removed, Title Case)
+     e.g. "red_idol_mask.png" → use "RedIdolMask" in the code
+   - The value after = is the success page URL to redirect to
+   - Lines starting with # are comments and are ignored
+
+   FAIL PAGE
+   Set FAIL_PAGE to the URL of your fail page.
+
+   ═══════════════════════════════════════════════════════════ */
+
+const CONFIG = {
+  CODES_FILE:  "codes.txt",         // path to your codes config file
+  FAIL_PAGE:   "fail.html",         // universal fail page URL
+
+  LAYER_FOLDERS: [
+    "images/layer1",                // folder for layer 1 images
+    "images/layer2",                // folder for layer 2 images
+    "images/layer3",                // folder for layer 3 images
+    "images/layer4",                // folder for layer 4 images
+  ],
+
+  // Image extensions to look for in the folder manifest
+  // (see README note about how folders are read)
+  IMAGE_EXTENSIONS: ["jpg","jpeg","png","gif","webp","svg"],
+
+  // If true, redirects to success/fail pages.
+  // If false, shows result overlay instead (useful for testing).
+  REDIRECT_ON_RESULT: true,
+};
+
+/* ═══════════════════════════════════════════════════════════
+   HOW FOLDER READING WORKS
+
+   Browsers cannot list directory contents directly.
+   You have two options:
+
+   OPTION A — manifest.json (recommended for local use)
+   In each layer folder, place a file called manifest.json:
+     ["red_idol_mask.png", "ancient_totem.png", "blue_orb.png", ...]
+   The puzzle reads this file to know which images exist.
+
+   OPTION B — server with directory listing enabled
+   If your web server has directory listing on, the puzzle
+   can parse the HTML to find image links automatically.
+   Set CONFIG.USE_DIRECTORY_LISTING = true below.
+
+   OPTION C — hardcode image lists (simplest, no server needed)
+   Set CONFIG.LAYER_IMAGES below directly as arrays of filenames.
+   Leave empty arrays to use folder loading instead.
+
+   ═══════════════════════════════════════════════════════════ */
+
+CONFIG.USE_DIRECTORY_LISTING = false;
+
+// OPTION C: hardcode if you prefer (leave [] to use manifest.json)
+CONFIG.LAYER_IMAGES = [
+  [],  // layer 1: e.g. ["red_mask.png","blue_orb.png","stone_idol.png",...]
+  [],  // layer 2
+  [],  // layer 3
+  [],  // layer 4
+];
+
+/* ─────────────────────────────────────────────────────────── */
+
+// ── State ──────────────────────────────────────────────────
+let currentLayer  = 0;
+let selections    = [];   // array of key strings, one per layer
+let codes         = {};   // { "Key1Key2Key3Key4": "success.html", ... }
+let layerImages   = [[], [], [], []];
+
+const grid        = document.getElementById('grid');
+const loading     = document.getElementById('loading');
+const errorMsg    = document.getElementById('error-msg');
+const seqDisplay  = document.getElementById('sequence-display');
+const resultScreen = document.getElementById('result-screen');
+const resultIcon  = document.getElementById('result-icon');
+const resultTitle = document.getElementById('result-title');
+const resultMsg   = document.getElementById('result-msg');
+
+// ── Helpers ─────────────────────────────────────────────────
+function parseLabel(filename) {
+  return filename
+    .replace(/\.[^.]+$/, '')               // strip extension
+    .replace(/[_\-\.]+/g, ' ')             // underscores/hyphens → spaces
+    .replace(/\b\w/g, c => c.toUpperCase()); // Title Case
+}
+
+function labelToKey(label) {
+  return label.replace(/\s+/g, '');        // "Red Idol Mask" → "RedIdolMask"
+}
+
+function showError(msg) {
+  loading.classList.add('hidden');
+  errorMsg.classList.remove('hidden');
+  errorMsg.innerHTML = msg;
+}
+
+// ── Load codes.txt ──────────────────────────────────────────
+async function loadCodes() {
+  try {
+    const resp = await fetch(CONFIG.CODES_FILE);
+    if (!resp.ok) throw new Error(`Could not load ${CONFIG.CODES_FILE} (${resp.status})`);
+    const text = await resp.text();
+    const lines = text.split('\n').map(l => l.trim()).filter(l => l && !l.startsWith('#'));
+    for (const line of lines) {
+      const [sequence, page] = line.split('=');
+      if (sequence && page) codes[sequence.trim()] = page.trim();
+    }
+  } catch (e) {
+    // Non-fatal: puzzle works but all codes will fail
+    console.warn('codes.txt not loaded:', e.message);
+  }
+}
+
+// ── Load image list for a layer ─────────────────────────────
+async function loadLayerImages(layerIndex) {
+  // Priority 1: hardcoded
+  if (CONFIG.LAYER_IMAGES[layerIndex] && CONFIG.LAYER_IMAGES[layerIndex].length > 0) {
+    return CONFIG.LAYER_IMAGES[layerIndex];
+  }
+
+  const folder = CONFIG.LAYER_FOLDERS[layerIndex];
+
+  // Priority 2: manifest.json
+  try {
+    const resp = await fetch(`${folder}/manifest.json`);
+    if (resp.ok) {
+      const list = await resp.json();
+      return list;
+    }
+  } catch (_) {}
+
+  // Priority 3: directory listing
+  if (CONFIG.USE_DIRECTORY_LISTING) {
+    try {
+      const resp = await fetch(folder + '/');
+      if (resp.ok) {
+        const html = await resp.text();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const links = Array.from(doc.querySelectorAll('a[href]'))
+          .map(a => a.getAttribute('href'))
+          .filter(href => {
+            const ext = href.split('.').pop().toLowerCase();
+            return CONFIG.IMAGE_EXTENSIONS.includes(ext);
+          });
+        return links;
+      }
+    } catch (_) {}
+  }
+
+  return [];
+}
+
+// ── Build tile grid ─────────────────────────────────────────
+function buildGrid(images, folderPath) {
+  grid.innerHTML = '';
+  if (!images.length) {
+    grid.innerHTML = `<div style="color:var(--muted);font-size:0.75rem;grid-column:1/-1;text-align:center;padding:2rem;">
+      No images found in "${folderPath}".<br>Add a manifest.json or use CONFIG.LAYER_IMAGES.
+    </div>`;
+    return;
+  }
+
+  for (const filename of images) {
+    const label = parseLabel(filename);
+    const key   = labelToKey(label);
+
+    const tile  = document.createElement('div');
+    tile.className = 'tile';
+    tile.dataset.key = key;
+
+    const img   = document.createElement('img');
+    img.src = `${folderPath}/${filename}`;
+    img.alt = label;
+    img.loading = 'lazy';
+    img.onerror = () => img.classList.add('broken');
+
+    const lbl   = document.createElement('div');
+    lbl.className = 'tile-label';
+    lbl.textContent = label;
+
+    tile.appendChild(img);
+    tile.appendChild(lbl);
+
+    tile.addEventListener('click', e => onTileClick(e, tile, key));
+    grid.appendChild(tile);
+  }
+}
+
+// ── Tile click handler ──────────────────────────────────────
+function onTileClick(e, tile, key) {
+  // Ripple effect
+  const rect = tile.getBoundingClientRect();
+  const r = document.createElement('span');
+  r.className = 'ripple';
+  const size = Math.max(rect.width, rect.height);
+  r.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX-rect.left-size/2}px;top:${e.clientY-rect.top-size/2}px`;
+  tile.appendChild(r);
+  r.addEventListener('animationend', () => r.remove());
+
+  // Mark selected
+  document.querySelectorAll('.tile').forEach(t => t.classList.remove('selected'));
+  tile.classList.add('selected', 'scanning');
+  tile.addEventListener('animationend', () => tile.classList.remove('scanning'), { once: true });
+
+  // Record and advance after brief delay
+  selections[currentLayer] = key;
+  updateSequenceDisplay();
+
+  setTimeout(() => advanceLayer(), 350);
+}
+
+// ── Update sequence display ─────────────────────────────────
+function updateSequenceDisplay() {
+  const parts = selections.map((s, i) =>
+    `<span>${s}</span>`
+  ).join(' › ');
+  seqDisplay.innerHTML = `sequence: ${parts || '—'}`;
+}
+
+// ── Advance layer ────────────────────────────────────────────
+async function advanceLayer() {
+  currentLayer++;
+  updatePips();
+
+  if (currentLayer >= 4) {
+    // All 4 layers selected — evaluate
+    evaluate();
+    return;
+  }
+
+  // Load next layer
+  loading.classList.remove('hidden');
+  grid.innerHTML = '';
+  const images = layerImages[currentLayer];
+  loading.classList.add('hidden');
+  buildGrid(images, CONFIG.LAYER_FOLDERS[currentLayer]);
+}
+
+// ── Evaluate sequence ────────────────────────────────────────
+function evaluate() {
+  const code = selections.join('');
+  console.log('Evaluating code:', code);
+
+  if (CONFIG.REDIRECT_ON_RESULT) {
+    if (codes[code]) {
+      window.location.href = codes[code];
+    } else {
+      window.location.href = CONFIG.FAIL_PAGE;
+    }
+    return;
+  }
+
+  // Non-redirect mode: show overlay
+  resultScreen.classList.add('visible');
+  if (codes[code]) {
+    resultScreen.className = 'visible success';
+    resultIcon.textContent  = '✓';
+    resultTitle.textContent = 'ACCESS GRANTED';
+    resultMsg.textContent   = `Code accepted. Would redirect to: ${codes[code]}`;
+  } else {
+    resultScreen.className = 'visible fail';
+    resultIcon.textContent  = '✗';
+    resultTitle.textContent = 'ACCESS DENIED';
+    resultMsg.textContent   = `Unknown sequence. Redirecting to fail page.`;
+  }
+}
+
+// ── Update pip indicators ────────────────────────────────────
+function updatePips() {
+  for (let i = 0; i < 4; i++) {
+    const pip = document.getElementById(`pip-${i}`);
+    pip.className = 'layer-pip';
+    if (i < currentLayer)      pip.classList.add('done');
+    else if (i === currentLayer && currentLayer < 4) pip.classList.add('active');
+  }
+  const label = document.getElementById('layer-label');
+  if (currentLayer < 4) {
+    label.textContent = `LAYER ${currentLayer + 1} / 4`;
+  } else {
+    label.textContent = 'EVALUATING…';
+  }
+}
+
+// ── Reset ────────────────────────────────────────────────────
+async function resetPuzzle() {
+  currentLayer = 0;
+  selections   = [];
+  resultScreen.className = '';
+  updatePips();
+  updateSequenceDisplay();
+  loading.classList.remove('hidden');
+  grid.innerHTML = '';
+  const images = layerImages[0];
+  loading.classList.add('hidden');
+  buildGrid(images, CONFIG.LAYER_FOLDERS[0]);
+}
+
+// ── Init ─────────────────────────────────────────────────────
+(async function init() {
+  loading.classList.remove('hidden');
+
+  await loadCodes();
+
+  // Pre-load all layer image lists
+  const results = await Promise.all([0,1,2,3].map(i => loadLayerImages(i)));
+  for (let i = 0; i < 4; i++) layerImages[i] = results[i];
+
+  loading.classList.add('hidden');
+  updatePips();
+
+  if (!layerImages[0].length) {
+    showError(
+      `No images found for layer 1 in <code>${CONFIG.LAYER_FOLDERS[0]}</code>.<br><br>` +
+      `Options:<br>` +
+      `① Add a <code>manifest.json</code> to each image folder (array of filenames)<br>` +
+      `② Hardcode filenames in <code>CONFIG.LAYER_IMAGES</code> inside puzzle.html<br>` +
+      `③ Enable directory listing on your server and set <code>CONFIG.USE_DIRECTORY_LISTING = true</code>`
+    );
+    return;
+  }
+
+  buildGrid(layerImages[0], CONFIG.LAYER_FOLDERS[0]);
+})();
+</script>
+</body>
+</html>

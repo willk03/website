@@ -1,0 +1,28 @@
+# ═══════════════════════════════════════════════════════════
+# CIPHER CODES CONFIGURATION
+# ═══════════════════════════════════════════════════════════
+#
+# FORMAT:
+#   Layer1Key,Layer2Key,Layer3Key,Layer4Key=success-page.html
+#
+# KEYS are generated from image filenames by:
+#   1. Stripping the extension          (red_mask.png → red_mask)
+#   2. Replacing _ - . with spaces      (red_mask → red mask)
+#   3. Title Case                       (red mask → Red Mask)
+#   4. Removing spaces                  (Red Mask → RedMask)
+#
+# Examples:
+#   "fire_symbol.png"   → key is FireSymbol
+#   "ancient-totem.jpg" → key is AncientTotem
+#   "blue orb.png"      → key is BlueOrb
+#
+# MULTIPLE CODES can point to different success pages.
+# All codes that don't match go to the universal fail page.
+#
+# Lines starting with # are comments and are ignored.
+# ═══════════════════════════════════════════════════════════
+
+# ── Example codes (replace with your real image names) ─────
+
+#Test 1
+RedOrangeBlueGreen=success.html
