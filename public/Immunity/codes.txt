@@ -25,13 +25,13 @@
 # ── Example codes (replace with your real image names) ─────
 
 #Film
-HumphreyBogartImmunityFlyMeToTheMoonFrankSinatra=success.html
+HumphreyBogartImmunityFlyMeToTheMoonFrankSinatra=success-s.html
 
 #Music
-ZendayaBladeRunnerImmaterialCharliXCX=success.html
+ZendayaBladeRunnerImmaterialCharliXCX=success-h.html
 
 #Mutiny
-JamesDeanTheBigLebowskiAlrightMFDOOM=success.html
+JamesDeanTheBigLebowskiAlrightMFDOOM=success-m.html
 
 #A-List
-MargotRobbieLaLaLandHeavenOrLasVegasKateBush=success.html
+#MargotRobbieLaLaLandHeavenOrLasVegasKateBush=success.html
